@@ -26,19 +26,44 @@ struct ContentView: View {
                 
                 UserAnnotation() // 내 위치 표현
                 
-            }.mapStyle(selectedMapOption.mapStyle)
+            }
+            .mapControls({
+                MapUserLocationButton()
+                MapCompass()
+                MapScaleView()
+                
+            })
+            .mapStyle(selectedMapOption.mapStyle)
                 .onChange(of: locationManager.region) { oldValue, newValue in
                     withAnimation {
                         position = .region(locationManager.region) // 카메라의 위치를 현재 싱글톤인 locationManager가 갖고있는 region으로 설정한다.
                     }
                 }
-            Picker("Map Styles", selection: $selectedMapOption) { // tag를 붙여야지 $selectedMapOption의 값이 그에 맞게 적용된다, MapOptions이 Identifiable 프로토콜을 따르고 있기 때문에, selection과 tag내부는 반드시 타입이 같아야한다.
-                ForEach(MapOptions.allCases) { mapOption in
-                    Text(mapOption.rawValue.capitalized).tag(mapOption)
+//            Picker("Map Styles", selection: $selectedMapOption) { // tag를 붙여야지 $selectedMapOption의 값이 그에 맞게 적용된다, MapOptions이 Identifiable 프로토콜을 따르고 있기 때문에, selection과 tag내부는 반드시 타입이 같아야한다.
+//                ForEach(MapOptions.allCases) { mapOption in
+//                    Text(mapOption.rawValue.capitalized).tag(mapOption)
+//                }
+//            }.pickerStyle(.segmented)
+//                .background(.white)
+//                .padding()
+            
+            VStack {
+                Spacer()
+                HStack {
+                    Button("Coffee") {
+                        withAnimation {
+                            position = .region(.coffee)
+                        }
+                    }.buttonStyle(.borderedProminent)
+                        .tint(.brown)
+                    
+                    Button("Restaurant") {
+                        withAnimation {
+                            position = .region(.restaurant)
+                        }
+                    }.buttonStyle(.borderedProminent)
                 }
-            }.pickerStyle(.segmented)
-                .background(.white)
-                .padding()
+            }
         }
     }
 }

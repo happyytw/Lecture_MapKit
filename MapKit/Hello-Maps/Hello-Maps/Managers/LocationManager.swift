@@ -19,18 +19,29 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         super.init()
         self.manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
-        if self.manager.authorizationStatus == .notDetermined {
-            // 만약 권한이 없다면
-            self.manager.requestWhenInUseAuthorization()
-            // self.manager.startUpdatingLocation() // 사용자의 위치가 변할때마다 계속 업데이트를 한다.
-            self.manager.requestLocation() // 사용자의 위치를 요청하는 메서드로 콜백함수인 didUpdateLocation을 호출하게된다 // 단 한번만 실행
-        }
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         locations.last.map {
             // span = 확대 정도
             region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude), span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
+        }
+    }
+    
+    // ocationManagerDidChangeAuthorization의 좋은점은 LocationManager가 실행될때마다 자동으로 실행된다.
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization() // 앱을 사용중일때 물어본다.
+        case .authorizedAlways, .authorizedWhenInUse: // 항상 허용, 앱을 실행중일때만 허용
+            manager.requestLocation() // 위치를 한번 요청한다.
+        case .denied:
+            print("denied")
+        case .restricted:
+            print("restricted")
+        default:
+            break
         }
     }
     

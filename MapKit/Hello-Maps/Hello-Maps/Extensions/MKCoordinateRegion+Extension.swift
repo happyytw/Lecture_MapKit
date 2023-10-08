@@ -16,4 +16,12 @@ extension MKCoordinateRegion: Equatable {
             return false
         }
     }
+    
+    static var coffee: MKCoordinateRegion {
+        MKCoordinateRegion(center: .coffee, span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+    }
+    
+    static var restaurant: MKCoordinateRegion {
+        MKCoordinateRegion(center: .restaurant, span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+    }
 }
